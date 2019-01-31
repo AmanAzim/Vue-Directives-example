@@ -33,6 +33,10 @@
 
                 <p v-local-highlight:background.blink.delayed="'red'">Local Highlighted blink delayed text 8</p>
 
+                <p v-advance-local-highlight:background.blink="{mainColor:'green', secondColor:'yellow', delay:500}">Advance Local Highlighted blink delayed text 9</p>
+
+                <p v-advance-local-highlight="{mainColor:'green'}">Advance Local Highlighted blink delayed text 10</p>
+
             </div>
         </div>
     </div>
@@ -77,7 +81,44 @@
                         }
                      }, delay);
                 }
-            }
+            },
+            'advance-local-highlight': {
+                bind(el, binding, vnode) {
+
+                    var delay = 0;
+                    if (binding.modifiers['delayed']) {
+                        delay = binding.value.delay;
+                    }
+                    if(binding.modifiers['blink']){
+                        let mainColor=binding.value.mainColor;
+                        let secondColor=binding.value.secondColor;
+                        let currentColor=mainColor;
+
+                        setTimeout(() => {
+
+                            setInterval(()=>{
+                                currentColor==secondColor ? currentColor=mainColor : currentColor=secondColor;
+
+                                if (binding.arg == 'background') {
+                                    el.style.backgroundColor = currentColor;
+                                } else {
+                                    el.style.color = currentColor;
+                                }
+
+                            }, 1000);
+
+                        }, delay);
+                    }
+                    setTimeout(() => {
+
+                        if (binding.arg == 'background') {
+                            el.style.backgroundColor = binding.value.mainColor;
+                        } else {
+                            el.style.color = binding.value.mainColor;
+                        }
+                    }, delay);
+                }
+            },
         }
     }
 </script>
